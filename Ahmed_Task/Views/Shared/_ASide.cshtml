@@ -1,0 +1,124 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+
+    <aside class="bg-dark text-white vh-100 p-3 shadow-lg"
+           style="width: 280px; position: fixed; left: 0; top: 0;">
+
+        <!-- Logo -->
+        <div class="d-flex align-items-center mb-4 pb-3 border-bottom border-secondary">
+
+            <div class="bg-white text-dark fw-bold rounded-3 d-flex align-items-center justify-content-center"
+                 style="width:50px; height:50px; font-size:22px;">
+
+                D
+
+            </div>
+
+            <div class="ms-3">
+
+                <h4 class="mb-0 fw-bold">
+                    MedLink
+                </h4>
+
+                <small class="text-secondary">
+                    Management System
+                </small>
+
+            </div>
+
+        </div>
+
+        <!-- User -->
+        <!-- Navigation -->
+        <ul class="nav nav-pills flex-column gap-2">
+
+            <li class="nav-item">
+
+                <a asp-controller="Home"
+                   asp-action="Index"
+                   class="nav-link @(currentController == "Home" && currentAction == "Index" ? "active" : "text-white") rounded-3 py-3 px-3">
+
+                    <i class="bi bi-grid-fill me-2"></i>
+                    Home
+                </a>
+
+            </li>
+
+            <li class="nav-item">
+
+                <a asp-controller="Doctors"
+                   asp-action="Index"
+                   class="nav-link @(currentController == "Doctors" ? "active" : "text-white") rounded-3 py-3 px-3">
+
+                    <i class="bi bi-person-badge-fill me-2"></i>
+                    Doctors
+
+                </a>
+
+            </li>
+
+            <li class="nav-item">
+
+                <a asp-controller="Patients"
+                   asp-action="Index"
+                   class="nav-link @(currentController == "Patients" ? "active" : "text-white") rounded-3 py-3 px-3">
+
+                    <i class="bi bi-calendar-check-fill me-2"></i>
+                    Patients
+
+                </a>
+
+            </li>
+
+            <li class="nav-item">
+
+                <a asp-controller="Specialities"
+                   asp-action="Index"
+                   class="nav-link @(currentController == "Specialities" ? "active" : "text-white") rounded-3 py-3 px-3">
+
+                    <i class="bi bi-people-fill me-2"></i>
+                    Specialities
+
+                </a>
+
+            </li>
+
+            <li class="nav-item">
+
+                <a href="#"
+                   class="nav-link text-white rounded-3 py-3 px-3">
+
+                    <i class="bi bi-gear-fill me-2"></i>
+                    Settings
+
+                </a>
+
+            </li>
+
+        </ul>
+
+        <!-- Bottom Section -->
+        <div class="position-absolute bottom-0 start-0 w-100 p-3">
+
+            <div class="border-top border-secondary pt-3">
+
+                <a asp-controller="Account"
+                   asp-action="SignOut"
+                   class="btn btn-outline-light w-100 rounded-3 py-2">
+
+                    <i class="bi bi-box-arrow-right me-2"></i>
+                    Logout
+                </a>
+
+            </div>
+
+        </div>
+
+    </aside>
+}

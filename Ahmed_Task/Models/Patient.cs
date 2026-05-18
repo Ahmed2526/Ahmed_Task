@@ -20,4 +20,6 @@ public partial class Patient
     public string Password { get; set; }
 
     public string ProfilePic { get; set; }
+
+    public bool IsLockedOut { get; set; } = false;
 }

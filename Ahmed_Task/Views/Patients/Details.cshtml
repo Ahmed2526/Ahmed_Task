@@ -1,0 +1,30 @@
+﻿@model PatientVM
+
+@{
+    ViewData["Title"] = "Patient Details";
+}
+
+<div class="container">
+<h1>Patient Details</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <p><strong>Name:</strong> @Model.Name</p>
+        <p><strong>Email:</strong> @Model.Email</p>
+        <p><strong>Phone:</strong> @Model.Phone</p>
+        <p><strong>Date of Birth:</strong> @Model.DateOfBirth</p>
+
+        @if (Model.IsLockedOut)
+        {
+            <p><strong>Is Locked Out:</strong> <span class="badge text-bg-danger">Locked</span> </p>
+        }
+        else
+        {
+            <p><strong>Is Locked Out:</strong> <span class="badge text-bg-success">Active</span> </p>
+        }
+    </div>
+</div>
+
+<a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>

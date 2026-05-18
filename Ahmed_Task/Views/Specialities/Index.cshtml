@@ -1,0 +1,104 @@
+﻿@model IEnumerable<SpecialityVM>
+
+@{
+    ViewData["Title"] = "Specialities";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css" />
+}
+
+<div class="container">
+
+    <div class="d-flex justify-content-between align-items-center">
+    <h1>Specialities</h1>
+        <a asp-action="Create" class="btn btn-primary">Add Speciality</a>
+    </div>
+    <hr />
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th class="text-end">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var speciality in Model)
+            {
+                <tr>
+                    <td>@speciality.Id</td>
+                    <td>@speciality.Name</td>
+                    <td class="text-end">
+                        <a asp-action="Edit" asp-route-id="@speciality.Id" class="btn btn-primary me-3">Edit</a>
+                        <a onclick="remove(@speciality.Id)" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@Html.AntiForgeryToken()
+
+@section Scripts {
+
+    @* Jquery *@
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    @* Sweet Alerts *@
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @* Data tables *@
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+        $('.table').DataTable();
+
+        });
+
+
+        function remove(id) {
+        Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+        if (result.isConfirmed) {
+        $.ajax({
+        url: '/Specialities/Delete/' + id,
+        type: 'POST',
+        headers: {
+        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+        },
+        success: function () {
+        Swal.fire(
+        'Deleted!',
+        'Your speciality has been deleted.',
+        'success'
+        ).then(() => {
+        location.reload();
+        });
+        },
+        error: function () {
+        Swal.fire(
+        'Error!',
+        'There was an error deleting the speciality.',
+        'error'
+        );
+        }
+        });
+        }
+        })
+        }   
+
+       
+    </script>
+}

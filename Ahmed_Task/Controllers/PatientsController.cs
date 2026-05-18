@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore;
 namespace Ahmed_Task.Controllers
 {
     [Authorize(Roles = Roles.Admin)]
-    public class DoctorsController : Controller
+    public class PatientsController : Controller
     {
         private readonly MedLinkDbContext _context;
 
-        public DoctorsController(MedLinkDbContext context)
+        public PatientsController(MedLinkDbContext context)
         {
             _context = context;
         }
@@ -20,36 +20,35 @@ namespace Ahmed_Task.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var doctors = await _context.Doctors.Select(e => new DoctorVM
+            var patients = await _context.Patients.Select(e => new PatientVM
             {
                 Id = e.Id,
-                Name = e.FirstName + " " + e.LastName,
+                Name = e.Name,
                 Email = e.Email,
                 Phone = e.Phone,
-                Speciality = e.Speciality.Name,
                 IsLockedOut = e.IsLockedOut
             }).ToListAsync();
 
-            return View(doctors);
+            return View(patients);
         }
 
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
-            var doctor = await _context.Doctors.Select(e => new DoctorVM
+            var patient = await _context.Patients.Select(e => new PatientVM
             {
                 Id = e.Id,
-                Name = e.FirstName + " " + e.LastName,
+                Name = e.Name,
                 Email = e.Email,
                 Phone = e.Phone,
-                Speciality = e.Speciality.Name,
+                DateOfBirth = e.BirthDate,
                 IsLockedOut = e.IsLockedOut
             }).FirstOrDefaultAsync(e => e.Id == id);
 
-            if (doctor is null)
+            if (patient is null)
                 return NotFound();
 
-            return View(doctor);
+            return View(patient);
         }
 
 
@@ -57,30 +56,28 @@ namespace Ahmed_Task.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ToggleLock(int id)
         {
-            var doctor = await _context.Doctors.FindAsync(id);
+            var patient = await _context.Patients.FindAsync(id);
 
-            if (doctor == null)
+            if (patient == null)
             {
                 return NotFound(new
                 {
                     success = false,
-                    message = "Doctor not found!"
+                    message = "Patient not found!"
                 });
             }
 
-            doctor.IsLockedOut = !doctor.IsLockedOut;
+            patient.IsLockedOut = !patient.IsLockedOut;
 
             await _context.SaveChangesAsync();
 
             return Json(new
             {
                 success = true,
-                message = doctor.IsLockedOut
-                    ? "Doctor Locked Successfully!"
-                    : "Doctor Unlocked Successfully!"
+                message = patient.IsLockedOut
+                    ? "Patient Locked Successfully!"
+                    : "Patient Unlocked Successfully!"
             });
         }
-
-
     }
 }

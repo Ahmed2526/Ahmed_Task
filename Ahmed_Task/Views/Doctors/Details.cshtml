@@ -1,0 +1,21 @@
+﻿@model DoctorVM
+
+@{
+    ViewData["Title"] = "Doctor Details";
+}
+
+<div class="container">
+    <h1>Doctor Details</h1>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-6">
+            <p><strong>Name:</strong> @Model.Name</p>
+            <p><strong>Email:</strong> @Model.Email</p>
+            <p><strong>Phone:</strong> @Model.Phone</p>
+            <p><strong>Speciality:</strong> @Model.Speciality</p>
+            <p><strong>Is Locked Out:</strong> @Model.IsLockedOut</p>
+        </div>
+    </div>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>

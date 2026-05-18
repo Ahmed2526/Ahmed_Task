@@ -1,7 +1,7 @@
-﻿@model IEnumerable<DoctorVM>
+﻿@model IEnumerable<PatientVM>
 
 @{
-    ViewData["Title"] = "Doctors";
+    ViewData["Title"] = "Patients";
 }
 
 @section Styles {
@@ -10,7 +10,7 @@
 
 <div class="container">
 
-<h1>Doctors</h1>
+<h1>Patients</h1>
 <hr />
 
 <table class="table table-hover">
@@ -19,21 +19,19 @@
             <th>Name</th>
             <th>Email</th>
             <th>Phone</th>
-            <th>Speciality</th>
             <th>Is Locked Out</th>
             <th class="">Actions</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var doctor in Model)
+        @foreach (var patient in Model)
         {
             <tr>
-                <td>@doctor.Name</td>
-                <td>@doctor.Email</td>
-                <td>@doctor.Phone</td>
-                <td>@doctor.Speciality</td>
+                <td>@patient.Name</td>
+                <td>@patient.Email</td>
+                <td>@patient.Phone</td>
                 <td>
-                    @if (doctor.IsLockedOut)
+                    @if (patient.IsLockedOut)
                     {
                         <span class="badge bg-danger">Locked</span>
                     }
@@ -43,15 +41,15 @@
                     }
                 </td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@doctor.Id" class="btn btn-primary me-3">Details</a>
+                    <a asp-action="Details" asp-route-id="@patient.Id" class="btn btn-primary me-3">Details</a>
 
-                    @if (doctor.IsLockedOut)
+                    @if (patient.IsLockedOut)
                     {
-                        <a onclick="toggleLock(@doctor.Id)" class="btn btn-success">Unlock</a>
+                        <a onclick="toggleLock(@patient.Id)" class="btn btn-success">Unlock</a>
                     }
                     else
                     {
-                        <a onclick="toggleLock(@doctor.Id)" class="btn btn-danger">Lock</a>
+                        <a onclick="toggleLock(@patient.Id)" class="btn btn-danger">Lock</a>
                     }
 
                 </td>
@@ -82,7 +80,7 @@
 
         });
 
-        function toggleLock(doctorId) {
+        function toggleLock(patientId) {
 
         Swal.fire({
         title: "Are you sure you want to do this?",
@@ -96,7 +94,7 @@
 
         $.ajax({
 
-        url: '/Doctors/ToggleLock/' + doctorId,
+        url: '/Patients/ToggleLock/' + patientId,
         type: 'POST',
 
         headers: {

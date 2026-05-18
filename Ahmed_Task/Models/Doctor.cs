@@ -28,4 +28,6 @@ public partial class Doctor
     public string ProfilePic { get; set; }
 
     public virtual Speciality Speciality { get; set; }
+
+    public bool IsLockedOut { get; set; } = false;
 }
