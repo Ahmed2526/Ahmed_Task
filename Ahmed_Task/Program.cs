@@ -18,6 +18,10 @@ namespace Ahmed_Task
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                  options.UseSqlServer(connectionString));
 
+            //Register Medlink DBContext
+            builder.Services.AddDbContext<MedLinkDbContext>(opt =>
+            opt.UseSqlServer(builder.Configuration.GetConnectionString("MedLinkConnection")));
+
             // Add Identity services
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()

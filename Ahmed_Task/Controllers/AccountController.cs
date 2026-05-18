@@ -81,15 +81,7 @@ namespace Maktabaty.Web.Controllers
                 return View(request);
             }
 
-            var result = await _signInManager.PasswordSignInAsync(user, request.Password, request.RememberMe, lockoutOnFailure: true);
-
-            if (result.IsLockedOut)
-            {
-                ModelState.AddModelError(string.Empty,
-                    "Your account is locked. Please contact administrator.");
-
-                return View(request);
-            }
+            var result = await _signInManager.PasswordSignInAsync(user, request.Password, request.RememberMe, lockoutOnFailure: false);
 
             if (!result.Succeeded)
             {
@@ -114,14 +106,14 @@ namespace Maktabaty.Web.Controllers
             return View();
         }
 
-        [AcceptVerbs("GET")]
+        [HttpGet]
         public async Task<IActionResult> CheckUniqueUserName(string UserName)
         {
             var user = await _userManager.FindByNameAsync(UserName);
             return Json(user == null);
         }
 
-        [AcceptVerbs("GET")]
+        [HttpGet]
         public async Task<IActionResult> CheckUniqueEmail(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
