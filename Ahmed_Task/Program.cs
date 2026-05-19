@@ -42,6 +42,11 @@ namespace Ahmed_Task
                 options.Cookie.HttpOnly = true;
             });
 
+            // Configure security stamp validation to check on every request
+            builder.Services.Configure<SecurityStampValidatorOptions>(options =>
+            {
+                options.ValidationInterval = TimeSpan.Zero;
+            });
 
             builder.Services.AddControllersWithViews();
 

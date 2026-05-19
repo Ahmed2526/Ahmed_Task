@@ -83,6 +83,14 @@ namespace Maktabaty.Web.Controllers
 
             var result = await _signInManager.PasswordSignInAsync(user, request.Password, request.RememberMe, lockoutOnFailure: false);
 
+            if (result.IsLockedOut)
+            {
+                ModelState.AddModelError(string.Empty,
+                    "Your account is locked. Please contact administrator.");
+
+                return View(request);
+            }
+
             if (!result.Succeeded)
             {
                 ModelState.AddModelError(string.Empty, "Invalid email or password.");

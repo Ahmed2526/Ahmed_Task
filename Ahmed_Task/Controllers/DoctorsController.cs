@@ -34,6 +34,7 @@ namespace Ahmed_Task.Controllers
         }
 
         [HttpGet]
+        //do each part seperately using ajax on demand to avoid loading data that may never be accessed.
         public async Task<IActionResult> Details(int id)
         {
             var doctor = await _context.Doctors.Select(e => new DoctorVM
@@ -57,6 +58,29 @@ namespace Ahmed_Task.Controllers
 
             if (doctor is null)
                 return NotFound();
+
+            //Select doctor Schedule
+            doctor.DoctorAvailablilities = await _context.DoctorAvailabilities.Where(e => e.DoctorId == id).Select(e => new DoctorAvailablilityVM
+            {
+                Id = e.Id,
+                Day = e.Day,
+                AppointmentStart = e.AppointmentStart,
+                AppointmentEnd = e.AppointmentEnd,
+                Clinic = e.Clinic.Name
+            }).ToListAsync();
+
+            //Select doctor Appointments
+            doctor.Appointment = await _context.Appointments.Where(e => e.DoctorId == id).Select(e => new AppointmentVM
+            {
+                Id = e.Id,
+                Patient = e.Patient.Name,
+                Clinic = e.Clinic.Name,
+                AppointmentStart = e.AppointmentStart,
+                AppointmentEnd = e.AppointmentEnd,
+                Status = ((AppointmentStatus)e.Status).ToString(),
+                Day = e.Day,
+            }).ToListAsync();
+
 
             return View(doctor);
         }

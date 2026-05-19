@@ -1,0 +1,50 @@
+﻿@model UserFormVM
+
+@{
+
+    ViewData["Title"] = "Edit User";
+}
+
+@section Styles {
+    @* Links for Select2 Package *@
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
+}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-5">
+            <h2>Edit User</h2>
+            <hr />
+            <form asp-action="Edit" method="post">
+                <div class="mb-4">
+                    <select asp-for="SelectedRoles"
+                            asp-items="Model.Roles"
+                            class="form-select select2"
+                            multiple>
+                    </select>
+                    <span asp-validation-for="SelectedRoles" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-primary me-2">Save Changes</button>
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    
+    @* Initialize select2 package *@
+    <script>
+        $(document).ready(function () {
+        $('.select2').select2({
+        placeholder: "Select roles",
+        allowClear: true,
+        width: '75%'
+        });
+        });
+    </script>
+}

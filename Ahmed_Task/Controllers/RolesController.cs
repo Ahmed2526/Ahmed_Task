@@ -42,7 +42,7 @@ namespace Ahmed_Task.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var role = new IdentityRole { Name = model.Name };
+            var role = new IdentityRole { Name = model.Name, NormalizedName = model.Name.ToUpper() };
 
             var result = await _roleManager.CreateAsync(role);
 
@@ -88,6 +88,7 @@ namespace Ahmed_Task.Controllers
                 return NotFound();
 
             role.Name = model.Name;
+            role.NormalizedName = model.Name.ToUpper();
 
             var result = await _roleManager.UpdateAsync(role);
 

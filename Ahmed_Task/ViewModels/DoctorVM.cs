@@ -10,5 +10,7 @@
 
         public bool IsLockedOut { get; set; }
         public IEnumerable<ClinicVM>? Clinics { get; set; }
+        public IEnumerable<DoctorAvailablilityVM> DoctorAvailablilities { get; set; }
+        public IEnumerable<AppointmentVM> Appointment { get; set; }
     }
 }
