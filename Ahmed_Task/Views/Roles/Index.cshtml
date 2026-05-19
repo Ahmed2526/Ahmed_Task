@@ -1,7 +1,7 @@
-﻿@model IEnumerable<SpecialityVM>
+﻿@model IEnumerable<RoleVM>
 
 @{
-    ViewData["Title"] = "Specialities";
+    ViewData["Title"] = "Roles";
 }
 
 @section Styles {
@@ -11,28 +11,26 @@
 <div class="container">
 
     <div class="d-flex justify-content-between align-items-center">
-    <h1>Specialities</h1>
-        <a asp-action="Create" class="btn btn-primary">Add Speciality</a>
+        <h1>Roles</h1>
+        <a asp-action="Create" class="btn btn-primary">Add Role</a>
     </div>
     <hr />
 
     <table class="table table-hover">
         <thead>
             <tr>
-                <th>Id</th>
                 <th>Name</th>
                 <th class="text-end">Actions</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var speciality in Model)
+            @foreach (var role in Model)
             {
                 <tr>
-                    <td>@speciality.Id</td>
-                    <td>@speciality.Name</td>
+                    <td>@role.Name</td>
                     <td class="text-end">
-                        <a asp-action="Edit" asp-route-id="@speciality.Id" class="btn btn-primary me-3">Edit</a>
-                        <a onclick="remove(@speciality.Id)" class="btn btn-danger">Delete</a>
+                        <a asp-action="Edit" asp-route-id="@role.Id" class="btn btn-primary me-3">Edit</a>
+                        <a onclick="remove('@role.Id')" class="btn btn-danger">Delete</a>
                     </td>
                 </tr>
             }
@@ -73,7 +71,7 @@
         }).then((result) => {
         if (result.isConfirmed) {
         $.ajax({
-        url: '/Specialities/Delete/' + id,
+        url: '/Roles/Delete/' + id,
         type: 'POST',
         headers: {
         'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
@@ -81,7 +79,7 @@
         success: function () {
         Swal.fire(
         'Deleted!',
-        'speciality has been deleted.',
+        'role has been deleted.',
         'success'
         ).then(() => {
         location.reload();
@@ -90,14 +88,14 @@
         error: function () {
         Swal.fire(
         'Error!',
-        'There was an error deleting the speciality.',
+        'There was an error deleting the role.',
         'error'
         );
         }
         });
         }
         })
-        }   
+        }
 
        
     </script>

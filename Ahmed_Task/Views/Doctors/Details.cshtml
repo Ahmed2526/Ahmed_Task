@@ -14,8 +14,69 @@
             <p><strong>Email:</strong> @Model.Email</p>
             <p><strong>Phone:</strong> @Model.Phone</p>
             <p><strong>Speciality:</strong> @Model.Speciality</p>
-            <p><strong>Is Locked Out:</strong> @Model.IsLockedOut</p>
+            @if (Model.IsLockedOut)
+            {
+                <p><strong>Is Locked Out:</strong> <span class="badge text-bg-danger">Locked</span> </p>
+            }
+            else
+            {
+                <p><strong>Is Locked Out:</strong> <span class="badge text-bg-success">Active</span> </p>
+            }
         </div>
     </div>
-    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    <a asp-action="Index" class="btn btn-secondary me-3">Back to List</a>
+    <button onclick="showclinics()" class="btn btn-outline-primary">Clinics</button>
+
+    <div class="d-none mt-4" id="clinictable">
+        <h1>Clinics</h1>
+        <hr />
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Speciality</th>
+                    <th>Location</th>
+                    <th>Phone</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Clinics == null || !Model.Clinics.Any())
+                {
+                    <tr>
+                        <td colspan="6">No clinics assigned to this doctor.</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var clinic in Model.Clinics)
+                    {
+                        <tr>
+                            <td>@clinic.Id</td>
+                            <td>@clinic.Name</td>
+                            <td>@clinic.Speciality</td>
+                            <td>@clinic.Location</td>
+                            <td>@clinic.Phone</td>
+                            <td>@clinic.Price</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
 </div>
+
+@section Scripts {
+    <script>
+        function showclinics() {
+            var clinicTable = document.getElementById("clinictable");
+            if (clinicTable.classList.contains("d-none")) {
+                clinicTable.classList.remove("d-none");
+            } else {
+                clinicTable.classList.add("d-none");
+            }
+        }
+    </script>
+}

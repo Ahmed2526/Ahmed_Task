@@ -43,7 +43,16 @@ namespace Ahmed_Task.Controllers
                 Email = e.Email,
                 Phone = e.Phone,
                 Speciality = e.Speciality.Name,
-                IsLockedOut = e.IsLockedOut
+                IsLockedOut = e.IsLockedOut,
+                Clinics = e.Clinics.Select(c => new ClinicVM
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    Speciality = c.Speciality.Name,
+                    Location = c.Location.Governate.Name + " - " + c.Location.City.Name,
+                    Phone = c.Phone,
+                    Price = c.Price
+                }).ToList()
             }).FirstOrDefaultAsync(e => e.Id == id);
 
             if (doctor is null)

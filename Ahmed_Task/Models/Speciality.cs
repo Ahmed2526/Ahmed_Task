@@ -11,5 +11,7 @@ public partial class Speciality
 
     public string Name { get; set; }
 
+    public virtual ICollection<Clinic> Clinics { get; set; } = new List<Clinic>();
+
     public virtual ICollection<Doctor> Doctors { get; set; } = new List<Doctor>();
 }

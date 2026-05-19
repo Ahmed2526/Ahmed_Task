@@ -5,34 +5,29 @@ using System.Collections.Generic;
 
 namespace Ahmed_Task.Models;
 
-public partial class Doctor
+public partial class Clinic
 {
     public int Id { get; set; }
 
-    public string FirstName { get; set; }
-
-    public string LastName { get; set; }
-
-    public string Email { get; set; }
-
     public string Phone { get; set; }
 
-    public string Password { get; set; }
+    public decimal Price { get; set; }
+
+    public int DoctorId { get; set; }
+
+    public int LocationId { get; set; }
+
+    public string Name { get; set; }
 
     public int SpecialityId { get; set; }
 
-    public string About { get; set; }
-
-    public double? Rate { get; set; }
-
-    public string ProfilePic { get; set; }
-    public bool IsLockedOut { get; set; }
-
     public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
 
-    public virtual ICollection<Clinic> Clinics { get; set; } = new List<Clinic>();
+    public virtual Doctor Doctor { get; set; }
 
     public virtual ICollection<DoctorAvailability> DoctorAvailabilities { get; set; } = new List<DoctorAvailability>();
+
+    public virtual Location Location { get; set; }
 
     public virtual Speciality Speciality { get; set; }
 }

@@ -20,6 +20,7 @@ public partial class Patient
     public string Password { get; set; }
 
     public string ProfilePic { get; set; }
+    public bool IsLockedOut { get; set; }
 
-    public bool IsLockedOut { get; set; } = false;
+    public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
 }

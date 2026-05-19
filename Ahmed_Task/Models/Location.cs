@@ -19,5 +19,7 @@ public partial class Location
 
     public virtual City City { get; set; }
 
+    public virtual ICollection<Clinic> Clinics { get; set; } = new List<Clinic>();
+
     public virtual Governate Governate { get; set; }
 }

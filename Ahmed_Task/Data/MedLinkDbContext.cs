@@ -14,9 +14,15 @@ public partial class MedLinkDbContext : DbContext
     {
     }
 
+    public virtual DbSet<Appointment> Appointments { get; set; }
+
     public virtual DbSet<City> Cities { get; set; }
 
+    public virtual DbSet<Clinic> Clinics { get; set; }
+
     public virtual DbSet<Doctor> Doctors { get; set; }
+
+    public virtual DbSet<DoctorAvailability> DoctorAvailabilities { get; set; }
 
     public virtual DbSet<Governate> Governates { get; set; }
 
@@ -28,6 +34,25 @@ public partial class MedLinkDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Appointment>(entity =>
+        {
+            entity.HasIndex(e => e.ClinicId, "IX_Appointments_ClinicId");
+
+            entity.HasIndex(e => e.DoctorId, "IX_Appointments_DoctorId");
+
+            entity.HasIndex(e => e.PatientId, "IX_Appointments_PatientId");
+
+            entity.Property(e => e.Price).HasColumnType("decimal(18, 2)");
+
+            entity.HasOne(d => d.Clinic).WithMany(p => p.Appointments).HasForeignKey(d => d.ClinicId);
+
+            entity.HasOne(d => d.Doctor).WithMany(p => p.Appointments)
+                .HasForeignKey(d => d.DoctorId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            entity.HasOne(d => d.Patient).WithMany(p => p.Appointments).HasForeignKey(d => d.PatientId);
+        });
+
         modelBuilder.Entity<City>(entity =>
         {
             entity.HasIndex(e => e.GovernateId, "IX_Cities_GovernateId");
@@ -37,6 +62,29 @@ public partial class MedLinkDbContext : DbContext
             entity.HasOne(d => d.Governate).WithMany(p => p.Cities)
                 .HasForeignKey(d => d.GovernateId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
+        });
+
+        modelBuilder.Entity<Clinic>(entity =>
+        {
+            entity.HasIndex(e => e.DoctorId, "IX_Clinics_DoctorId");
+
+            entity.HasIndex(e => e.LocationId, "IX_Clinics_LocationId");
+
+            entity.HasIndex(e => e.SpecialityId, "IX_Clinics_SpecialityId");
+
+            entity.Property(e => e.Name)
+                .IsRequired()
+                .HasDefaultValue("");
+            entity.Property(e => e.Phone).IsRequired();
+            entity.Property(e => e.Price).HasColumnType("decimal(18, 2)");
+
+            entity.HasOne(d => d.Doctor).WithMany(p => p.Clinics)
+                .HasForeignKey(d => d.DoctorId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            entity.HasOne(d => d.Location).WithMany(p => p.Clinics).HasForeignKey(d => d.LocationId);
+
+            entity.HasOne(d => d.Speciality).WithMany(p => p.Clinics).HasForeignKey(d => d.SpecialityId);
         });
 
         modelBuilder.Entity<Doctor>(entity =>
@@ -64,6 +112,21 @@ public partial class MedLinkDbContext : DbContext
                 .HasMaxLength(25);
 
             entity.HasOne(d => d.Speciality).WithMany(p => p.Doctors).HasForeignKey(d => d.SpecialityId);
+        });
+
+        modelBuilder.Entity<DoctorAvailability>(entity =>
+        {
+            entity.HasIndex(e => e.ClinicId, "IX_DoctorAvailabilities_ClinicId");
+
+            entity.HasIndex(e => e.DoctorId, "IX_DoctorAvailabilities_DoctorId");
+
+            entity.Property(e => e.Day).IsRequired();
+
+            entity.HasOne(d => d.Clinic).WithMany(p => p.DoctorAvailabilities)
+                .HasForeignKey(d => d.ClinicId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            entity.HasOne(d => d.Doctor).WithMany(p => p.DoctorAvailabilities).HasForeignKey(d => d.DoctorId);
         });
 
         modelBuilder.Entity<Governate>(entity =>

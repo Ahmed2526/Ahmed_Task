@@ -9,5 +9,6 @@
         public string Speciality{ get; set; }
 
         public bool IsLockedOut { get; set; }
+        public IEnumerable<ClinicVM>? Clinics { get; set; }
     }
 }
