@@ -48,6 +48,18 @@ namespace Ahmed_Task.Controllers
             if (patient is null)
                 return NotFound();
 
+            patient.Appointments = await _context.Appointments.Where(a => a.PatientId == id).Select(a => new AppointmentVM
+            {
+                Id = a.Id,
+                Doctor = a.Doctor.FirstName + " " + a.Doctor.LastName,
+                Clinic = a.Clinic.Name,
+                AppointmentStart = a.AppointmentStart,
+                AppointmentEnd = a.AppointmentEnd,
+                Status = ((AppointmentStatus)a.Status).ToString(),
+                Day = a.Day
+            }).ToListAsync();
+
+
             return View(patient);
         }
 

@@ -8,5 +8,7 @@
         public string Phone { get; set; }
         public DateOnly DateOfBirth { get; set; }
         public bool IsLockedOut { get; set; }
+
+        public IEnumerable<AppointmentVM> Appointments { get; set; }
     }
 }

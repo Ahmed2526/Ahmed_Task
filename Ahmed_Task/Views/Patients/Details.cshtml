@@ -26,5 +26,68 @@
     </div>
 </div>
 
+<button onclick="showAppointments()" class="btn btn-primary me-3">Appointments</button>
 <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+
+<div class="d-none mt-4" id="appointmentTable">
+    <h1>Appointments</h1>
+    <hr />
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Doctor</th>
+                <th>Clinic</th>
+                <th>Appointment Start</th>
+                <th>Appointment End</th>
+                <th>Status</th>
+                <th>Day</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Appointments == null || !Model.Appointments.Any())
+            {
+                <tr>
+                    <td colspan="7">No appointments available for this patient.</td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var appointment in Model.Appointments)
+                {
+                    var statusClass = appointment.Status switch
+                    {
+                        "bending" => "text-bg-warning",
+                        "Paid" => "text-bg-primary",
+                        "Done" => "text-bg-success",
+                        "canceled" => "text-bg-danger",
+                        _ => "text-bg-secondary"
+                    };
+                    <tr>
+                        <td>@appointment.Id</td>
+                        <td>@appointment.Doctor</td>
+                        <td>@appointment.Clinic</td>
+                        <td>@appointment.AppointmentStart</td>
+                        <td>@appointment.AppointmentEnd</td>
+                        <td><span class="badge @statusClass">@appointment.Status</span></td>
+                        <td>@appointment.Day</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
 </div>
+</div>
+
+@section Scripts {
+    <script>
+        function showAppointments() {
+            var appointmentTable = document.getElementById("appointmentTable");
+            if (appointmentTable.classList.contains("d-none")) {
+                appointmentTable.classList.remove("d-none");
+            } else {
+                appointmentTable.classList.add("d-none");
+            }
+        }
+    </script>
+}

@@ -6,7 +6,8 @@ namespace Ahmed_Task.ViewModels
     {
         public int Id { get; set; }
 
-        public string Patient { get; set; }
+        public string? Patient { get; set; }
+        public string? Doctor { get; set; }
 
         public string Clinic { get; set; }
 
