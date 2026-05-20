@@ -1,0 +1,85 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+
+    <aside class="bg-dark text-white vh-100 p-3 shadow-lg"
+           style="width: 280px; position: fixed; left: 0; top: 0;">
+
+        <!-- Logo -->
+        <div class="d-flex align-items-center mb-4 pb-3 border-bottom border-secondary">
+
+            <div class="bg-white text-dark fw-bold rounded-3 d-flex align-items-center justify-content-center"
+                 style="width:50px; height:50px; font-size:22px;">
+                M
+            </div>
+
+            <div class="ms-3">
+
+                <h4 class="mb-0 fw-bold">
+                    MedLink
+                </h4>
+
+                <small class="text-secondary">
+                    Management System
+                </small>
+
+            </div>
+
+        </div>
+
+        <!-- User -->
+        <!-- Navigation -->
+        <ul class="nav nav-pills flex-column gap-2">
+
+            <li class="nav-item">
+
+                <a asp-controller="Home"
+                   asp-action="Index"
+                   asp-area="Receptionist"
+                   class="nav-link @(currentController == "Home" && currentAction == "Index" ? "active" : "text-white") rounded-3 py-3 px-3">
+
+                    <i class="bi bi-grid-fill me-2"></i>
+                    Home
+                </a>
+
+            </li>
+
+            <li class="nav-item">
+
+                <a asp-controller="Doctor"
+                   asp-action="Index"
+                   asp-area="Receptionist"
+                   class="nav-link @(currentController == "Doctor" && currentAction == "Index" ? "active" : "text-white") rounded-3 py-3 px-3">
+
+                    <i class="bi bi-grid-fill me-2"></i>
+                    Doctor
+                </a>
+
+            </li>
+
+        </ul>
+
+        <!-- Bottom Section -->
+        <div class="position-absolute bottom-0 start-0 w-100 p-3">
+
+            <div class="border-top border-secondary pt-3">
+
+                <a asp-area="" asp-controller="Account"
+                   asp-action="SignOut"
+                   class="btn btn-outline-light w-100 rounded-3 py-2">
+
+                    <i class="bi bi-box-arrow-right me-2"></i>
+                    Logout
+                </a>
+
+            </div>
+
+        </div>
+
+    </aside>
+}

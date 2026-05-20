@@ -4,9 +4,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace Ahmed_Task.Controllers
+namespace Areas.Receptionist.Controllers
 {
-    [Authorize(Roles = Roles.Admin)]
+    [Area("Receptionist")]
+    [Authorize(Roles = Roles.Receptionist)]
     public class HomeController : Controller
     {
         public IActionResult Index()

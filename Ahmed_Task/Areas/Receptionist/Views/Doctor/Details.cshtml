@@ -1,0 +1,189 @@
+﻿@model DoctorVM
+
+@{
+    ViewData["Title"] = "Doctor Details";
+}
+
+<div class="container">
+    <h1>Doctor Details</h1>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-6">
+            <p><strong>Name:</strong> @Model.Name</p>
+            <p><strong>Email:</strong> @Model.Email</p>
+            <p><strong>Phone:</strong> @Model.Phone</p>
+            <p><strong>Speciality:</strong> @Model.Speciality</p>
+        </div>
+    </div>
+    <button onclick="showClinics()" class="btn btn-primary me-3">Clinics</button>
+    <button onclick="showDocAvail()" class="btn btn-primary me-3">Schedule</button>
+    <button onclick="showAppointments()" class="btn btn-primary me-3">Appointments</button>
+    <a asp-action="Index" class="btn btn-secondary ">Back to List</a>
+
+
+    <div class="d-none mt-4" id="clinictable">
+        <div class="d-flex justify-content-between align-items-center">
+        <h1>Clinics</h1>
+        <a asp-action="AddClinic" asp-route-id="@Model.Id" class="btn btn-primary">Add Clinic</a>
+        </div>
+        <hr />
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Speciality</th>
+                    <th>Location</th>
+                    <th>Phone</th>
+                    <th>Price</th>
+                    <td>Actions</td>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Clinics == null || !Model.Clinics.Any())
+                {
+                    <tr>
+                        <td colspan="6">No clinics assigned to this doctor.</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var clinic in Model.Clinics)
+                    {
+                        <tr>
+                            <td>@clinic.Id</td>
+                            <td>@clinic.Name</td>
+                            <td>@clinic.Speciality</td>
+                            <td>@clinic.Location</td>
+                            <td>@clinic.Phone</td>
+                            <td>@clinic.Price</td>
+                            <td>
+                                <a asp-action="EditClinic" asp-route-id="@clinic.Id" class="btn btn-sm btn-primary">Edit</a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="d-none mt-4" id="Scheduletable">
+        <h1>Schedule</h1>
+        <hr />
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Day</th>
+                    <th>Appointment Start</th>
+                    <th>Appointment End</th>
+                    <th>Clinic</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.DoctorAvailablilities == null || !Model.DoctorAvailablilities.Any())
+                {
+                    <tr>
+                        <td colspan="5">No schedule available for this doctor.</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var availability in Model.DoctorAvailablilities)
+                    {
+                        <tr>
+                            <td>@availability.Day</td>
+                            <td>@availability.AppointmentStart</td>
+                            <td>@availability.AppointmentEnd</td>
+                            <td>@availability.Clinic</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="d-none mt-4" id="Appointmenttable">
+        <h1>Appointments</h1>
+        <hr />
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Patient</th>
+                    <th>Clinic</th>
+                    <th>Appointment Start</th>
+                    <th>Appointment End</th>
+                    <th>Status</th>
+                    <th>Day</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Appointment == null || !Model.Appointment.Any())
+                {
+                    <tr>
+                        <td colspan="7">No appointments available for this doctor.</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var appointment in Model.Appointment)
+                    {
+                        var statusClass = appointment.Status switch
+                        {
+                            "bending" => "text-bg-warning",
+                            "Paid" => "text-bg-success",
+                            "Done" => "text-bg-primary",
+                            "canceled" => "text-bg-danger",
+                            _ => "text-bg-secondary"
+                        };
+                        <tr>
+                            <td>@appointment.Id</td>
+                            <td>@appointment.Patient</td>
+                            <td>@appointment.Clinic</td>
+                            <td>@appointment.AppointmentStart</td>
+                            <td>@appointment.AppointmentEnd</td>
+                            <td><span class="badge @statusClass">@appointment.Status</span></td>
+                            <td>@appointment.Day</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        function showClinics() {
+            var clinicTable = document.getElementById("clinictable");
+            if (clinicTable.classList.contains("d-none")) {
+                clinicTable.classList.remove("d-none");
+            } else {
+                clinicTable.classList.add("d-none");
+            }
+        }
+
+        function showDocAvail() {
+            var scheduleTable = document.getElementById("Scheduletable");
+            if (scheduleTable.classList.contains("d-none")) {
+                scheduleTable.classList.remove("d-none");
+            } else {
+                scheduleTable.classList.add("d-none");
+            }
+        }
+
+        function showAppointments() {
+            var appointmentTable = document.getElementById("Appointmenttable");
+            if (appointmentTable.classList.contains("d-none")) {
+                appointmentTable.classList.remove("d-none");
+            } else {
+                appointmentTable.classList.add("d-none");
+            }
+        }
+
+    </script>
+}
+
+                

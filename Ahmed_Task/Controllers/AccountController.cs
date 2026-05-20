@@ -1,4 +1,5 @@
-﻿using Ahmed_Task.Models;
+﻿using Ahmed_Task.Enums;
+using Ahmed_Task.Models;
 using Ahmed_Task.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -95,6 +96,16 @@ namespace Maktabaty.Web.Controllers
             {
                 ModelState.AddModelError(string.Empty, "Invalid email or password.");
                 return View(request);
+            }
+
+            var IsReceptionist = await _userManager.IsInRoleAsync(user, Roles.Receptionist);
+
+            if (IsReceptionist)
+            {
+                return RedirectToAction(
+                    "Index",
+                    "Home",
+                    new { area = "Receptionist" });
             }
 
             return RedirectToAction("Index", "Home");

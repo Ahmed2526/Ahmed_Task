@@ -1,0 +1,360 @@
+﻿@using Ahmed_Task.Areas.Receptionist.ViewModel
+@model ClinicFormVM
+
+@{
+    ViewData["Title"] = "Edit Clinic";
+}
+
+@section Styles {
+
+    <!-- Select2 -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
+
+}
+
+<div class="container py-4">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-9">
+
+            <div class="card border-0 shadow-sm rounded-4">
+
+                <div class="card-body p-5">
+
+                    <!-- Header -->
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+
+                        <div>
+
+                            <h2 class="fw-bold mb-1">
+                                Edit Clinic
+                            </h2>
+
+                            <p class="text-muted mb-0">
+                                Update clinic information
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Form -->
+                    <form asp-action="EditClinic"
+                          method="post">
+
+                        <!-- Hidden -->
+                        <input type="hidden"
+                               asp-for="Id" />
+
+                        <input type="hidden"
+                               asp-for="DoctorId" />
+
+                        <!-- Validation -->
+                        <div asp-validation-summary="ModelOnly"
+                             class="text-danger mb-3">
+                        </div>
+
+                        <div class="row">
+
+                            <!-- Clinic Name -->
+                            <div class="col-md-6 mb-4">
+
+                                <div class="form-floating">
+
+                                    <input asp-for="Name"
+                                           class="form-control"
+                                           placeholder="Clinic Name" />
+
+                                    <label asp-for="Name">
+                                        Clinic Name
+                                    </label>
+
+                                </div>
+
+                                <span asp-validation-for="Name"
+                                      class="text-danger">
+                                </span>
+
+                            </div>
+
+                            <!-- Phone -->
+                            <div class="col-md-6 mb-4">
+
+                                <div class="form-floating">
+
+                                    <input asp-for="Phone"
+                                           class="form-control"
+                                           placeholder="Phone Number" />
+
+                                    <label asp-for="Phone">
+                                        Phone Number
+                                    </label>
+
+                                </div>
+
+                                <span asp-validation-for="Phone"
+                                      class="text-danger">
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+
+                            <!-- Price -->
+                            <div class="col-md-6 mb-4">
+
+                                <div class="form-floating">
+
+                                    <input asp-for="Price"
+                                           class="form-control"
+                                           placeholder="Price" />
+
+                                    <label asp-for="Price">
+                                        Consultation Price
+                                    </label>
+
+                                </div>
+
+                                <span asp-validation-for="Price"
+                                      class="text-danger">
+                                </span>
+
+                            </div>
+
+                            <!-- Speciality -->
+                            <div class="col-md-6 mb-4">
+
+                                <label class="form-label fw-semibold">
+                                    Speciality
+                                </label>
+
+                                <select asp-for="SpecialityId"
+                                        asp-items="Model.Speciality"
+                                        class="form-select select2">
+
+                                    <option value="">
+                                        Select Speciality
+                                    </option>
+
+                                </select>
+
+                                <span asp-validation-for="SpecialityId"
+                                      class="text-danger">
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <!-- Divider -->
+                        <hr class="my-4" />
+
+                        <h5 class="fw-bold mb-4">
+                            Location Information
+                        </h5>
+
+                        <!-- Street -->
+                        <div class="form-floating mb-4">
+
+                            <input asp-for="Location.Street"
+                                   class="form-control"
+                                   placeholder="Street" />
+
+                            <label asp-for="Location.Street">
+                                Street Address
+                            </label>
+
+                        </div>
+
+                        <span asp-validation-for="Location.Street"
+                              class="text-danger">
+                        </span>
+
+                        <div class="row">
+
+                            <!-- Postal Code -->
+                            <div class="col-md-4 mb-4">
+
+                                <div class="form-floating">
+
+                                    <input asp-for="Location.PostalCode"
+                                           class="form-control"
+                                           placeholder="Postal Code" />
+
+                                    <label asp-for="Location.PostalCode">
+                                        Postal Code
+                                    </label>
+
+                                </div>
+
+                                <span asp-validation-for="Location.PostalCode"
+                                      class="text-danger">
+                                </span>
+
+                            </div>
+
+                            <!-- Governate -->
+                            <div class="col-md-4 mb-4">
+
+                                <label class="form-label fw-semibold">
+                                    Governate
+                                </label>
+
+                                <select asp-for="Location.GovernateId"
+                                        asp-items="Model.Location.Governate"
+                                        class="form-select select2"
+                                        id="governateSelect">
+
+                                    <option value="">
+                                        Select Governate
+                                    </option>
+
+                                </select>
+
+                                <span asp-validation-for="Location.GovernateId"
+                                      class="text-danger">
+                                </span>
+
+                            </div>
+
+                            <!-- City -->
+                            <div class="col-md-4 mb-4">
+
+                                <label class="form-label fw-semibold">
+                                    City
+                                </label>
+
+                                <select asp-for="Location.CityId"
+                                        asp-items="Model.Location.City"
+                                        class="form-select select2"
+                                        id="citySelect">
+
+                                    <option value="">
+                                        Select City
+                                    </option>
+
+                                </select>
+
+                                <span asp-validation-for="Location.CityId"
+                                      class="text-danger">
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+
+                            <a asp-action="Details"
+                               asp-route-id="@Model.DoctorId"
+                               class="btn btn-outline-secondary px-4">
+
+                                Cancel
+
+                            </a>
+
+                            <button type="submit"
+                                    class="btn btn-dark px-4">
+
+                                Save Changes
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <!-- jQuery -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <!-- Select2 -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+
+        // Initialize Select2
+        $('.select2').select2({
+
+        placeholder: "Select option",
+
+        allowClear: true,
+
+        width: '100%'
+
+        });
+
+        // Load Cities
+        $('#governateSelect').change(function () {
+
+        var governateId = $(this).val();
+
+        $('#citySelect').empty();
+
+        $('#citySelect').append(
+        `<option value="">Loading...</option>`
+        );
+
+        $.ajax({
+
+        url: '/Receptionist/Doctor/GetCities',
+
+        type: 'GET',
+
+        data: {
+        governateId: governateId
+        },
+
+        success: function (cities) {
+
+        $('#citySelect').empty();
+
+        $('#citySelect').append(
+        `<option value="">Select City</option>`
+        );
+
+        $.each(cities, function (index, city) {
+
+        $('#citySelect').append(
+
+        `<option value="${city.id}">
+        ${city.name}
+        </option>`
+
+        );
+
+        });
+
+        $('#citySelect').trigger('change');
+
+        }
+
+        });
+
+        });
+
+        });
+
+    </script>
+
+}
