@@ -104,7 +104,7 @@ namespace Ahmed_Task.Areas.Receptionist.Controllers
                 AppointmentEnd = e.AppointmentEnd,
                 Status = ((AppointmentStatus)e.Status).ToString(),
                 Day = e.Day,
-            }).ToListAsync();
+            }).OrderByDescending(a => a.Day).ToListAsync();
 
 
             return View(doctor);
@@ -353,6 +353,278 @@ namespace Ahmed_Task.Areas.Receptionist.Controllers
                 .ToListAsync();
 
             return Json(cities);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> AddSchadule(int id)
+        {
+            var receptionistId =
+               User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Validate receptionist owns doctor
+            var isAssigned = await _ApplicationDbContext
+                .ReceptionistDoctors
+                .AnyAsync(rd =>
+                    rd.ReceptionistId == receptionistId &&
+                    rd.DoctorId == id);
+            if (!isAssigned)
+                return NotFound();
+
+            var schaduleFormVM = new SchaduleFormVM
+            {
+                DoctorId = id,
+                Clinics = await _MedLinkDbContext.Clinics
+                    .Where(c => c.DoctorId == id)
+                    .Select(c => new SelectListItem
+                    {
+                        Text = c.Name,
+                        Value = c.Id.ToString()
+                    })
+                    .ToListAsync()
+            };
+
+            return View(schaduleFormVM);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddSchadule(SchaduleFormVM schaduleFormVM)
+        {
+            var receptionistId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Validate receptionist owns doctor
+            var isAssigned = await _ApplicationDbContext
+                .ReceptionistDoctors
+                .AnyAsync(rd =>
+                    rd.ReceptionistId == receptionistId &&
+                    rd.DoctorId == schaduleFormVM.DoctorId);
+
+            if (!isAssigned)
+                return NotFound();
+
+            // Validate Clinic belongs to doctor
+            var clinicExists = await _MedLinkDbContext.Clinics
+                .AnyAsync(c =>
+                    c.Id == schaduleFormVM.ClinicId &&
+                    c.DoctorId == schaduleFormVM.DoctorId);
+
+            if (!clinicExists)
+            {
+                ModelState.AddModelError(
+                    nameof(schaduleFormVM.ClinicId),
+                    "Invalid clinic selected.");
+            }
+
+            // Validate appointment time
+            if (schaduleFormVM.AppointmentStart >=
+                schaduleFormVM.AppointmentEnd)
+            {
+                ModelState.AddModelError(
+                    string.Empty,
+                    "Appointment end time must be greater than start time.");
+            }
+
+            // Validate overlapping schedules
+            var hasConflict = await _MedLinkDbContext.DoctorAvailabilities
+                    .AnyAsync(s =>
+                        s.DoctorId == schaduleFormVM.DoctorId &&
+                        s.Day == schaduleFormVM.Day &&
+                        (
+                            schaduleFormVM.AppointmentStart < s.AppointmentEnd &&
+                            schaduleFormVM.AppointmentEnd > s.AppointmentStart
+                        ));
+
+            if (hasConflict)
+            {
+                ModelState.AddModelError(
+                    string.Empty,
+                    "This schedule conflicts with an existing schedule.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                schaduleFormVM.Clinics =
+                    await _MedLinkDbContext.Clinics
+                    .Where(c => c.DoctorId == schaduleFormVM.DoctorId)
+                    .Select(c => new SelectListItem
+                    {
+                        Text = c.Name,
+                        Value = c.Id.ToString()
+                    })
+                    .ToListAsync();
+
+                return View(schaduleFormVM);
+            }
+
+            // Create schedule
+            var schadule = new DoctorAvailability
+            {
+                Day = schaduleFormVM.Day,
+                AppointmentStart = schaduleFormVM.AppointmentStart,
+                AppointmentEnd = schaduleFormVM.AppointmentEnd,
+                DoctorId = schaduleFormVM.DoctorId,
+                ClinicId = schaduleFormVM.ClinicId
+            };
+
+            await _MedLinkDbContext.DoctorAvailabilities.AddAsync(schadule);
+
+            await _MedLinkDbContext.SaveChangesAsync();
+
+            return RedirectToAction(
+                "Details",
+                new { id = schaduleFormVM.DoctorId });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditSchadule(int id)
+        {
+            var receptionistId =
+                User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var schadule = await _MedLinkDbContext
+                .DoctorAvailabilities
+                .FirstOrDefaultAsync(s => s.Id == id);
+
+            if (schadule == null)
+                return NotFound();
+
+            // Validate receptionist owns doctor
+            var isAssigned = await _ApplicationDbContext
+                .ReceptionistDoctors
+                .AnyAsync(rd =>
+                    rd.ReceptionistId == receptionistId &&
+                    rd.DoctorId == schadule.DoctorId);
+
+            if (!isAssigned)
+                return NotFound();
+
+            var schaduleFormVM = new SchaduleFormVM
+            {
+                Id = schadule.Id,
+
+                Day = schadule.Day,
+
+                AppointmentStart =
+                    schadule.AppointmentStart,
+
+                AppointmentEnd =
+                    schadule.AppointmentEnd,
+
+                DoctorId =
+                    schadule.DoctorId,
+
+                ClinicId =
+                    schadule.ClinicId,
+
+                Clinics = await _MedLinkDbContext.Clinics
+                    .Where(c => c.DoctorId == schadule.DoctorId)
+                    .Select(c => new SelectListItem
+                    {
+                        Text = c.Name,
+                        Value = c.Id.ToString()
+                    })
+                    .ToListAsync()
+            };
+
+            return View(schaduleFormVM);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditSchadule(SchaduleFormVM schaduleFormVM)
+        {
+            var receptionistId =
+                User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Validate receptionist owns doctor
+            var isAssigned = await _ApplicationDbContext
+                .ReceptionistDoctors
+                .AnyAsync(rd =>
+                    rd.ReceptionistId == receptionistId &&
+                    rd.DoctorId == schaduleFormVM.DoctorId);
+
+            if (!isAssigned)
+                return NotFound();
+
+            // Validate clinic belongs to doctor
+            var clinicExists = await _MedLinkDbContext.Clinics
+                .AnyAsync(c =>
+                    c.Id == schaduleFormVM.ClinicId &&
+                    c.DoctorId == schaduleFormVM.DoctorId);
+
+            if (!clinicExists)
+            {
+                ModelState.AddModelError(
+                    nameof(schaduleFormVM.ClinicId),
+                    "Invalid clinic selected.");
+            }
+
+            // Validate time
+            if (schaduleFormVM.AppointmentStart >=
+                schaduleFormVM.AppointmentEnd)
+            {
+                ModelState.AddModelError(
+                    string.Empty,
+                    "Appointment end time must be greater than start time.");
+            }
+
+            // Validate overlapping schedules
+            var hasConflict = await _MedLinkDbContext
+                .DoctorAvailabilities
+                .AnyAsync(s =>
+                    s.Id != schaduleFormVM.Id &&
+                    s.DoctorId == schaduleFormVM.DoctorId &&
+                    s.Day == schaduleFormVM.Day &&
+                    (
+                        schaduleFormVM.AppointmentStart < s.AppointmentEnd &&
+                        schaduleFormVM.AppointmentEnd > s.AppointmentStart
+                    ));
+
+            if (hasConflict)
+            {
+                ModelState.AddModelError(
+                    string.Empty,
+                    "This schedule conflicts with an existing schedule.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                schaduleFormVM.Clinics =
+                    await _MedLinkDbContext.Clinics
+                    .Where(c => c.DoctorId == schaduleFormVM.DoctorId)
+                    .Select(c => new SelectListItem
+                    {
+                        Text = c.Name,
+                        Value = c.Id.ToString()
+                    })
+                    .ToListAsync();
+
+                return View(schaduleFormVM);
+            }
+
+            var schadule = await _MedLinkDbContext
+                .DoctorAvailabilities
+                .FirstOrDefaultAsync(s =>
+                    s.Id == schaduleFormVM.Id);
+
+            if (schadule == null)
+                return NotFound();
+
+            // Update
+            schadule.Day = schaduleFormVM.Day;
+
+            schadule.AppointmentStart = schaduleFormVM.AppointmentStart;
+
+            schadule.AppointmentEnd = schaduleFormVM.AppointmentEnd;
+
+            schadule.ClinicId = schaduleFormVM.ClinicId;
+
+            await _MedLinkDbContext.SaveChangesAsync();
+
+            return RedirectToAction(
+                "Details",
+                new { id = schaduleFormVM.DoctorId });
         }
     }
 }

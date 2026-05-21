@@ -1,0 +1,202 @@
+﻿@using Ahmed_Task.Areas.Receptionist.ViewModel
+@model SchaduleFormVM
+
+@{
+    ViewData["Title"] = "Add Schedule";
+}
+
+@section Styles {
+
+    <!-- Select2 -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
+
+}
+
+<div class="container py-4">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-7">
+
+            <div class="card border-0 shadow-sm rounded-4">
+
+                <div class="card-body p-5">
+
+                    <!-- Header -->
+                    <div class="mb-4">
+
+                        <h2 class="fw-bold mb-1">
+                            Add Schedule
+                        </h2>
+
+                        <p class="text-muted mb-0">
+                            Create doctor working schedule
+                        </p>
+
+                    </div>
+
+                    <!-- Form -->
+                    <form method="post">
+
+                        <!-- Validation -->
+                        <div asp-validation-summary="ModelOnly"
+                             class="text-danger mb-3">
+                        </div>
+
+                        <!-- Hidden Doctor -->
+                        <input type="hidden"
+                               asp-for="DoctorId" />
+
+                        <!-- Day -->
+                        <div class="mb-4">
+
+                            <label class="form-label fw-semibold">
+                                Day
+                            </label>
+
+                            <select asp-for="Day"
+                                    class="form-select select2">
+
+                                <option value="">
+                                    Select Day
+                                </option>
+
+                                <option value="Saturday">Saturday</option>
+                                <option value="Sunday">Sunday</option>
+                                <option value="Monday">Monday</option>
+                                <option value="Tuesday">Tuesday</option>
+                                <option value="Wednesday">Wednesday</option>
+                                <option value="Thursday">Thursday</option>
+                                <option value="Friday">Friday</option>
+
+                            </select>
+
+                            <span asp-validation-for="Day"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+                        <div class="row">
+
+                            <!-- Start Time -->
+                            <div class="col-md-6 mb-4">
+
+                                <label class="form-label fw-semibold">
+                                    Appointment Start
+                                </label>
+
+                                <input asp-for="AppointmentStart"
+                                       type="time"
+                                       class="form-control" />
+
+                                <span asp-validation-for="AppointmentStart"
+                                      class="text-danger">
+                                </span>
+
+                            </div>
+
+                            <!-- End Time -->
+                            <div class="col-md-6 mb-4">
+
+                                <label class="form-label fw-semibold">
+                                    Appointment End
+                                </label>
+
+                                <input asp-for="AppointmentEnd"
+                                       type="time"
+                                       class="form-control" />
+
+                                <span asp-validation-for="AppointmentEnd"
+                                      class="text-danger">
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <!-- Clinic -->
+                        <div class="mb-4">
+
+                            <label class="form-label fw-semibold">
+                                Clinic
+                            </label>
+
+                            <select asp-for="ClinicId"
+                                    asp-items="Model.Clinics"
+                                    class="form-select select2">
+
+                                <option value="">
+                                    Select Clinic
+                                </option>
+
+                            </select>
+
+                            <span asp-validation-for="ClinicId"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+
+                            <a asp-action="Details"
+                               asp-route-id="@Model.DoctorId"
+                               class="btn btn-outline-secondary px-4">
+
+                                Cancel
+
+                            </a>
+
+                            <button type="submit"
+                                    class="btn btn-dark px-4">
+
+                                Save Schedule
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <!-- jQuery -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <!-- Select2 -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+
+        $('.select2').select2({
+
+        placeholder: "Select option",
+
+        allowClear: true,
+
+        width: '100%'
+
+        });
+
+        });
+
+    </script>
+
+}
