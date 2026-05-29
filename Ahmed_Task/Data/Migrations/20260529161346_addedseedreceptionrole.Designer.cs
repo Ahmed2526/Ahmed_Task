@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ahmed_Task.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260529161346_addedseedreceptionrole")]
+    partial class addedseedreceptionrole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -101,22 +104,6 @@ namespace Ahmed_Task.Data.Migrations
                             SecurityStamp = "5b8a8bb5-0a44-4d30-9d18-8d0d6b2a9c2a",
                             TwoFactorEnabled = false,
                             UserName = "admin"
-                        },
-                        new
-                        {
-                            Id = "7c0d1b7a-3a8f-4d7c-4s2a-3b3b3e0c8f5d",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "1e8as2a5-6f2e-4f9f-9a31-6c4e6d1a8a4f",
-                            Email = "receptionist@receptionist.test",
-                            EmailConfirmed = true,
-                            LockoutEnabled = false,
-                            NormalizedEmail = "RECEPTIONIST@RECEPTIONIST.TEST",
-                            NormalizedUserName = "RECEPTIONIST",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBnyKXu3Y3Gi3XA25xx6ZKdZPoQl6YFtZrJva8U7EFX8WysYVFR8283XucvWa+4TnA==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "5b8a8ab5-0a34-4d40-9d18-8d2d6b2d9c2a",
-                            TwoFactorEnabled = false,
-                            UserName = "receptionist"
                         });
                 });
 
@@ -288,11 +275,6 @@ namespace Ahmed_Task.Data.Migrations
                         {
                             UserId = "7c0d1b7a-3b8f-4c7c-8e2a-3b3b3e0c8f5d",
                             RoleId = "e5a6c5f2-1b4a-4f9d-9a83-2f29c11c8f3b"
-                        },
-                        new
-                        {
-                            UserId = "7c0d1b7a-3a8f-4d7c-4s2a-3b3b3e0c8f5d",
-                            RoleId = "e5a6c5f2-1s4a-4f9d-9b83-2f69c11a8f3b"
                         });
                 });
 

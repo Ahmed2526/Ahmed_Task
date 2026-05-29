@@ -96,8 +96,7 @@ namespace Ahmed_Task.Controllers
 
             if (exists)
             {
-                ModelState.AddModelError(string.Empty,
-                    "Doctor already assigned to this receptionist.");
+                ModelState.AddModelError(string.Empty, "Doctor already assigned to this receptionist.");
 
                 vm.Doctors = await _medLinkDbContext.Doctors
                     .Select(d => new SelectListItem
@@ -116,9 +115,7 @@ namespace Ahmed_Task.Controllers
                 ReceptionistId = receptionist.Id
             };
 
-            await _applicationDbContext
-                .ReceptionistDoctors
-                .AddAsync(receptionistDoctor);
+            await _applicationDbContext.ReceptionistDoctors.AddAsync(receptionistDoctor);
 
             await _applicationDbContext.SaveChangesAsync();
 
